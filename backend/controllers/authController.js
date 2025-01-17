@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -13,16 +12,11 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         }
 
-        // Hash the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        console.log('Generated Hash:', hashedPassword); // Show the hashed password in terminal
-
-        // Create new user
+        // Create new user without hashing the password
         const newUser = new User({
             name,
             email,
-            password: hashedPassword
+            password, // Store password as plain text
         });
         await newUser.save();
 
@@ -40,28 +34,21 @@ const loginUser = async (req, res) => {
 
         // Check if user exists
         const user = await User.findOne({ email });
-        console.log('User:', user); // Log user details
-        console.log('Login Password:', password); // Logs raw input password
-        console.log('Hashed Password:', user.password); // Logs hashed password from DB
-
         if (!user) {
             return res.status(400).json({ error: 'Invalid email' });
         }
 
-        // Compare passwords
-        const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password Match:', isMatch); // Log password comparison result
-        if (!isMatch) {
+        // Compare passwords directly
+        if (user.password !== password) {
             return res.status(400).json({ error: 'Invalid password' });
         }
 
         // Generate JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        console.log('Generated Token:', token); // Log generated token
 
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {
-        console.error('Error during login:', err); // Log any errors
+        console.error(err);
         res.status(500).json({ error: 'Server error' });
     }
 };

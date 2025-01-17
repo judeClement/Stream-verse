@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import api from '../api';
+import { TextField, Button, Typography, Container, Paper } from '@mui/material';
+import api from '../api'; // Ensure this points to your Axios instance with the correct base URL
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,12 +19,60 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit">Login</button>
-            {message && <p>{message}</p>}
-        </form>
+        <Container component="main" maxWidth="xs" style={{ marginTop: '100px' }}>
+            <Paper elevation={3} style={{ padding: '20px', backgroundColor: '#141414', color: 'white' }}>
+                <Typography variant="h5" align="center" style={{ marginBottom: '20px' }}>
+                    Login
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        InputProps={{
+                            style: { backgroundColor: '#1c1c1c', color: 'white' },
+                        }}
+                        InputLabelProps={{
+                            style: { color: '#00b300' }, // Green color for label
+                        }}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        InputProps={{
+                            style: { backgroundColor: '#1c1c1c', color: 'white' },
+                        }}
+                        InputLabelProps={{
+                            style: { color: '#00b300' },
+                        }}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        style={{ backgroundColor: '#00b300', color: 'white', marginTop: '20px' }}
+                    >
+                        Login
+                    </Button>
+                    {message && (
+                      <Typography variant="body2" align="center" style={{ marginTop: '10px', color: '#00b300' }}>
+                          {message}
+                      </Typography>
+                    )}
+                </form>
+            </Paper>
+        </Container>
     );
 };
 
