@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "./Navbar.jsx";
-import RecommendedMovies from "./RecommendedMovies .jsx";
+import RecommendedMovies from "./RecommendedMovies.jsx";
 
 const WatchingPage = () => {
     // Default movie
     const defaultMovie = {
         id: 389, // TMDb ID for "12 Angry Men"
-        videoUrl: "https://ia801207.us.archive.org/30/items/12-angry-men-1957_202312/12%20Angry%20Men%20%281957%29.mp4",
+        videoUrl: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4", // Dummy video URL
         thumbnail: "https://facts.net/wp-content/uploads/2023/06/35-facts-about-the-movie-12-angry-men-1687250389.jpg",
     };
 
@@ -37,6 +37,13 @@ const WatchingPage = () => {
 
     const togglePlayPause = () => {
         const video = videoRef.current;
+
+        // Ensure video source is valid before playing
+        if (!video || !video.src || video.networkState === 3) {
+            console.error("No valid video source available.");
+            return;
+        }
+
         if (isPlaying) {
             video.pause();
         } else {
@@ -49,8 +56,8 @@ const WatchingPage = () => {
     const handleMovieSelect = (movie) => {
         setCurrentMovie({
             id: movie.id,
-            videoUrl: `https://via.placeholder.com/800x450?text=Video+Unavailable`, // Placeholder, replace with real video source
-            thumbnail: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
+            videoUrl: movie.videoUrl, // Set dummy video URL
+            thumbnail: movie.thumbnail, // Set movie-specific thumbnail
         });
         setIsPlaying(false);
     };
@@ -67,6 +74,7 @@ const WatchingPage = () => {
                         poster={currentMovie.thumbnail}
                         controls={isPlaying}
                         className="w-full h-full object-cover"
+                        onError={() => console.error("Video failed to load or play.")}
                     ></video>
 
                     {/* Custom Play/Pause Button */}
@@ -100,43 +108,6 @@ const WatchingPage = () => {
 
                 {/* Recommended Movies Section */}
                 <RecommendedMovies onMovieSelect={handleMovieSelect} />
-
-                {/* Feedback Section */}
-                <div className="p-4">
-                    <h2 className="text-2xl font-semibold mb-4">Add Feedback</h2>
-                    <form className="bg-gray-800 p-4 rounded">
-                        <div className="mb-4">
-                            <label className="block text-sm font-semibold mb-1">Name</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 bg-gray-700 rounded text-white"
-                                placeholder="Your Name"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-semibold mb-1">Email</label>
-                            <input
-                                type="email"
-                                className="w-full p-2 bg-gray-700 rounded text-white"
-                                placeholder="Your Email"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-semibold mb-1">Comments</label>
-                            <textarea
-                                className="w-full p-2 bg-gray-700 rounded text-white"
-                                rows="4"
-                                placeholder="Your Feedback"
-                            ></textarea>
-                        </div>
-                        <button
-                            type="submit"
-                            className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
-                        >
-                            Submit
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
     );

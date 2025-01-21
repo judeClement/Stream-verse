@@ -68,7 +68,7 @@ const MovieSlider = ({ movies }) => {
 
             {/* Trailer Modal */}
             {trailerUrl && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <div className="relative w-[80%] h-[60%]">
                         <iframe
                             width="100%"
@@ -81,7 +81,7 @@ const MovieSlider = ({ movies }) => {
                         ></iframe>
                         <button
                             onClick={() => setTrailerUrl(null)}
-                            className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-lg font-bold"
+                            className="absolute -top-8 -right-8 bg-green-600 text-white px-4 py-2 rounded-full text-lg font-bold"
                         >
                             ✖
                         </button>

@@ -53,4 +53,37 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+const getUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching user data' });
+    }
+};
+
+const updateUser = async (req, res) => {
+    try {
+        const { name, email, currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (user.password !== currentPassword) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+        if (newPassword) {
+            user.password = newPassword;
+        }
+
+        await user.save();
+        res.json({ message: 'Profile updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating profile' });
+    }
+};
+
+module.exports = { registerUser, loginUser, getUser, updateUser };
+
+

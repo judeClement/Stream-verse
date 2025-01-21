@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
 import WatchingPage from './components/WatchingPage';
+import Profile from './components/Profile';
 
 const App = () => (
     <Router>
@@ -12,6 +13,7 @@ const App = () => (
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/watch" element={<WatchingPage/>} />
+            <Route path='/profile' element={<Profile/>}/>
         </Routes>
     </Router>
 );

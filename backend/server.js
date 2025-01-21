@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 dotenv.config(); // Load environment variables
 connectDB(); // Connect to MongoDB
@@ -16,6 +17,8 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json()); // Parse JSON bodies
+
+app.use('/api/users', userRoutes);
 
 // Routes
 app.use('/api/auth', authRoutes);

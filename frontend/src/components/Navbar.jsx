@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../components/logo.jpg';
 
 const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -21,11 +22,33 @@ const Navbar = () => {
         };
     }, []);
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const dropdown = document.getElementById('dropdown');
+            const avatar = document.getElementById('user-avatar');
+
+            if (dropdownOpen && dropdown && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [dropdownOpen]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Clear the token
+        navigate('/login'); // Redirect to login page
+    };
+
     return (
         <header
             className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
                 isScrolled
-                    ? 'bg-black text-white shadow-md' // Change text color to white when scrolled
+                    ? 'bg-black text-white shadow-md'
                     : 'bg-transparent text-white'
             }`}
         >
@@ -46,7 +69,7 @@ const Navbar = () => {
                             <Link
                                 to="/"
                                 className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700' // White text on scroll
+                                    isScrolled ? 'text-white' : 'text-green-700'
                                 }`}
                             >
                                 Home
@@ -56,7 +79,7 @@ const Navbar = () => {
                             <Link
                                 to="/login"
                                 className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700' // White text on scroll
+                                    isScrolled ? 'text-white' : 'text-green-700'
                                 }`}
                             >
                                 Login
@@ -66,7 +89,7 @@ const Navbar = () => {
                             <Link
                                 to="/signup"
                                 className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700' // White text on scroll
+                                    isScrolled ? 'text-white' : 'text-green-700'
                                 }`}
                             >
                                 Signup
@@ -78,6 +101,7 @@ const Navbar = () => {
                 {/* User Avatar */}
                 <div className="relative">
                     <img
+                        id="user-avatar"
                         src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
                         alt="User Avatar"
                         className="h-10 w-10 rounded-full cursor-pointer"
@@ -85,16 +109,15 @@ const Navbar = () => {
                     />
                     {dropdownOpen && (
                         <div
-                            className="absolute right-0 mt-2 w-40 bg-gray-800 text-white rounded shadow-lg transition-opacity duration-300 ease-in-out opacity-0 animate-fadeIn"
+                            id="dropdown"
+                            className="absolute right-0 mt-2 w-40 bg-gray-800 text-white rounded shadow-lg transition-opacity duration-300 ease-in-out opacity-100"
                         >
                             <ul>
                                 <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                                    <Link to="/account">My Account</Link>
+                                    <Link to="/profile">My Account</Link>
                                 </li>
                                 <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                                    <button onClick={() => alert('Logout clicked')}>
-                                        Logout
-                                    </button>
+                                    <button onClick={handleLogout}>Logout</button>
                                 </li>
                             </ul>
                         </div>
