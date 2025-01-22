@@ -58,6 +58,24 @@ const Profile = () => {
         navigate('/');
     };
 
+    const [watchLater, setWatchLater] = useState([]);
+
+    useEffect(() => {
+        const fetchWatchLater = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const { data } = await api.get('/watchLater', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setWatchLater(data);
+            } catch (error) {
+                console.error('Error fetching Watch Later list:', error);
+            }
+        };
+    
+        fetchWatchLater();
+    }, []);
+
     return (
         <>
             <Navbar />
@@ -171,6 +189,20 @@ const Profile = () => {
                     </Button>
                 </Paper>
             </Container>
+            <h3 className="text-xl font-semibold mt-6">My Watchlist</h3>
+<div className="flex space-x-4 overflow-x-scroll scrollbar-hide mt-4">
+    {watchLater.map((movie) => (
+        <div key={movie.movieId} className="relative min-w-[200px] bg-gray-800 p-2 rounded hover:shadow-lg transition cursor-pointer">
+            <img
+                src={movie.poster}
+                alt={movie.title}
+                className="w-full h-[300px] object-cover rounded"
+            />
+            <p className="mt-2 text-sm font-semibold">{movie.title}</p>
+        </div>
+    ))}
+</div>
+
         </>
     );
 };

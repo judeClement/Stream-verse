@@ -5,15 +5,30 @@ import Signup from './components/Signup';
 import Home from './components/Home';
 import WatchingPage from './components/WatchingPage';
 import Profile from './components/Profile';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => (
     <Router>
         <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/login" element={<Login/>} />
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/watch" element={<WatchingPage/>} />
-            <Route path='/profile' element={<Profile/>}/>
+            <Route
+                path="/watch"
+                element={
+                    <PrivateRoute>
+                        <WatchingPage />
+                    </PrivateRoute>
+                }
+            />
+            <Route
+                path="/profile"
+                element={
+                    <PrivateRoute>
+                        <Profile />
+                    </PrivateRoute>
+                }
+            />
         </Routes>
     </Router>
 );

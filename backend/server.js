@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const watchLaterRoutes = require('./routes/watchLaterRoutes');
 
 dotenv.config(); // Load environment variables
 connectDB(); // Connect to MongoDB
@@ -22,6 +23,8 @@ app.use('/api/users', userRoutes);
 
 // Routes
 app.use('/api/auth', authRoutes);
+
+app.use('/api/watchLater', watchLaterRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

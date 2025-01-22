@@ -5,7 +5,14 @@ import logo from '../components/logo.jpg';
 const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
     const navigate = useNavigate();
+
+    // Check if the user is logged in
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token); // Set to true if token exists, false otherwise
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -41,6 +48,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token'); // Clear the token
+        setIsLoggedIn(false); // Update login status
         navigate('/login'); // Redirect to login page
     };
 
@@ -75,26 +83,43 @@ const Navbar = () => {
                                 Home
                             </Link>
                         </li>
-                        <li>
-                            <Link
-                                to="/login"
-                                className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700'
-                                }`}
-                            >
-                                Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/signup"
-                                className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700'
-                                }`}
-                            >
-                                Signup
-                            </Link>
-                        </li>
+                        {isLoggedIn ? (
+                            // Show Browse if user is logged in
+                            <li>
+                                <Link
+                                    to=""
+                                    className={`hover:text-white ${
+                                        isScrolled ? 'text-white' : 'text-green-700'
+                                    }`}
+                                >
+                                    Browse
+                                </Link>
+                            </li>
+                        ) : (
+                            <>
+                                {/* Show Login and Signup if user is not logged in */}
+                                <li>
+                                    <Link
+                                        to="/login"
+                                        className={`hover:text-white ${
+                                            isScrolled ? 'text-white' : 'text-green-700'
+                                        }`}
+                                    >
+                                        Login
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="/signup"
+                                        className={`hover:text-white ${
+                                            isScrolled ? 'text-white' : 'text-green-700'
+                                        }`}
+                                    >
+                                        Signup
+                                    </Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
 
