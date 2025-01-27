@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { Container, TextField, Button, Typography, Paper } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete'; // Import the delete icon
 import api from '../api'; // Axios instance for API calls
 
 const Profile = () => {
@@ -72,9 +73,21 @@ const Profile = () => {
                 console.error('Error fetching Watch Later list:', error);
             }
         };
-    
+
         fetchWatchLater();
     }, []);
+
+    const handleRemove = async (movieId) => {
+        try {
+            const token = localStorage.getItem('token');
+            await api.delete(`/watchLater/${movieId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setWatchLater((prev) => prev.filter((movie) => movie.movieId !== movieId));
+        } catch (error) {
+            console.error('Error removing movie from Watch Later list:', error);
+        }
+    };
 
     return (
         <>
@@ -190,19 +203,31 @@ const Profile = () => {
                 </Paper>
             </Container>
             <h3 className="text-xl font-semibold mt-6">My Watchlist</h3>
-<div className="flex space-x-4 overflow-x-scroll scrollbar-hide mt-4">
-    {watchLater.map((movie) => (
-        <div key={movie.movieId} className="relative min-w-[200px] bg-gray-800 p-2 rounded hover:shadow-lg transition cursor-pointer">
-            <img
-                src={movie.poster}
-                alt={movie.title}
-                className="w-full h-[300px] object-cover rounded"
-            />
-            <p className="mt-2 text-sm font-semibold">{movie.title}</p>
-        </div>
-    ))}
-</div>
-
+            <div className="flex space-x-4 overflow-x-scroll scrollbar-hide mt-4">
+                {watchLater.map((movie) => (
+                    <div
+                        key={movie.movieId}
+                        className="relative min-w-[200px] bg-gray-800 p-2 rounded hover:shadow-lg transition cursor-pointer"
+                    >
+                        <img
+                            src={movie.poster}
+                            alt={movie.title}
+                            className="w-full h-[300px] object-cover rounded"
+                        />
+                        <p className="mt-2 text-sm font-semibold">{movie.title}</p>
+                        <DeleteIcon
+                            onClick={() => handleRemove(movie.movieId)}
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                color: 'white',
+                                cursor: 'pointer',
+                            }}
+                        />
+                    </div>
+                ))}
+            </div>
         </>
     );
 };
