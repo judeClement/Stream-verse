@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     watchLater: [
         {
-            movieId: String,
+            movieId: { type: String, unique: true }, // Ensure movieId is unique in the array
             title: String,
             poster: String,
         },

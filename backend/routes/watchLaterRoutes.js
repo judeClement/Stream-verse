@@ -8,10 +8,25 @@ router.post('/add', authenticate, async (req, res) => {
     try {
         const { movieId, title, poster } = req.body;
         const user = await User.findById(req.user.id);
-        user.watchLater.push({ movieId, title, poster });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Ensure consistent type for movieId comparison (convert to string)
+        const movieExists = user.watchLater.some((movie) => movie.movieId === movieId.toString());
+
+        if (movieExists) {
+            return res.status(400).json({ message: 'Movie already added to Watch Later' });
+        }
+
+        // Add the movie to the Watch Later list
+        user.watchLater.push({ movieId: movieId.toString(), title, poster });
         await user.save();
+
         res.status(200).json({ message: 'Movie added to Watch Later!' });
     } catch (error) {
+        console.error('Error adding movie to Watch Later:', error);
         res.status(500).json({ message: 'Error adding movie to Watch Later' });
     }
 });

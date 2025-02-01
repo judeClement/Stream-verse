@@ -48,21 +48,21 @@ const RecommendedMovies = ({ onMovieSelect }) => {
     const handleWatchLater = async (movie) => {
         try {
             const token = localStorage.getItem('token');
-            await api.post(
+            const response = await api.post(
                 '/watchLater/add',
                 {
-                    movieId: movie.id,
+                    movieId: movie.id.toString(), // Ensure movieId is sent as a string
                     title: movie.title,
                     poster: movie.poster,
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            alert(`${movie.title} added to Watch Later!`);
+                alert(`${movie.title} added to Watch Later!`); // Success message
         } catch (error) {
-            console.error('Error adding to Watch Later:', error);
+            const message = error.response?.data.message || 'Error adding to Watch Later';
+            alert(message); // Show duplicate error or other messages
         }
     };
-    
 
     return (
         <div className="p-4">
