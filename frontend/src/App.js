@@ -6,6 +6,7 @@ import Home from './components/Home';
 import WatchingPage from './components/WatchingPage';
 import Profile from './components/Profile';
 import PrivateRoute from './components/PrivateRoute';
+import AdminDashboard from './components/AdminDashboard';
 
 const App = () => (
     <Router>
@@ -13,6 +14,7 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard/>}/>
             <Route
                 path="/watch"
                 element={

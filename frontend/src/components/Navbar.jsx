@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../components/logo.jpg';
+import api from '../api';
 
 const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
+    const [user, setUser] = useState(null);
+
     const navigate = useNavigate();
 
     // Check if the user is logged in
@@ -46,6 +49,23 @@ const Navbar = () => {
         };
     }, [dropdownOpen]);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const { data } = await api.get('/auth/me', {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    setUser(data);
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                }
+            }
+        };
+        fetchUser();
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem('token'); // Clear the token
         setIsLoggedIn(false); // Update login status
@@ -70,7 +90,7 @@ const Navbar = () => {
                     />
                 </Link>
 
-                {/* Navigation Links */}
+               {/* Navigation Links */}
                 <nav>
                     <ul className="flex space-x-6">
                         <li>
@@ -87,7 +107,7 @@ const Navbar = () => {
                             // Show Browse if user is logged in
                             <li>
                                 <Link
-                                    to=""
+                                    to="/watch"
                                     className={`hover:text-white ${
                                         isScrolled ? 'text-white' : 'text-green-700'
                                     }`}
@@ -120,6 +140,15 @@ const Navbar = () => {
                                 </li>
                             </>
                         )}
+                         {user && user.email === 'admin@gmail.com' && (
+                            <li>
+                              <Link to="/admin/dashboard"  className={`hover:text-white ${
+                                        isScrolled ? 'text-white' : 'text-green-700'
+                                    }`}>
+                                  Dashboard
+                              </Link>
+                            </li>
+                          )}
                     </ul>
                 </nav>
 

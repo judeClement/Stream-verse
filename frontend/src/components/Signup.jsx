@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper } from '@mui/material';
+import { TextField, Button, Typography, Container, Paper ,Link } from '@mui/material';
 import api from '../api'; // Ensure this points to your Axios instance with the correct base URL
 
 const Signup = () => {
@@ -86,6 +86,12 @@ const Signup = () => {
                       </Typography>
                     )}
                 </form>
+                <Typography variant="body2" align="center" style={{ marginTop: "20px" }}>
+                    Already a member?{" "}
+                    <Link href="/login" style={{ color: "#00b300", textDecoration: "none", fontWeight: "bold" }}>
+                        Login
+                    </Link>
+                </Typography>
             </Paper>
         </Container>
     );

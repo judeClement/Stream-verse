@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Typography, Container, Paper } from "@mui/material";
+import { TextField, Button, Typography, Container, Paper, Link } from "@mui/material";
 import api from "../api"; // Ensure this points to your Axios instance
 
 const Login = () => {
@@ -74,6 +74,12 @@ const Login = () => {
                         </Typography>
                     )}
                 </form>
+                <Typography variant="body2" align="center" style={{ marginTop: "20px" }}>
+                    Not a member?{" "}
+                    <Link href="/signup" style={{ color: "#00b300", textDecoration: "none", fontWeight: "bold" }}>
+                        Sign up
+                    </Link>
+                </Typography>
             </Paper>
         </Container>
     );
