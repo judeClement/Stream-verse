@@ -7,7 +7,7 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded Token:", decoded);
+      // console.log("Decoded Token:", decoded); 
 
       // ✅ Fetch full user details and store them in req.user
       const user = await User.findById(decoded.id).select('-password');
@@ -17,7 +17,7 @@ const protect = async (req, res, next) => {
       }
 
       req.user = user; // ✅ Store the complete user object, not just decoded token
-      console.log("Authenticated User:", req.user);
+      // console.log("Authenticated User:", req.user);
 
       next();
     } catch (error) {
@@ -33,7 +33,7 @@ const protect = async (req, res, next) => {
 
 // Middleware to check if the user is an admin
 const isAdmin = (req, res, next) => {
-  console.log("Checking Admin Access for:", req.user); // Debugging
+  //console.log("Checking Admin Access for:", req.user); 
 
   if (!req.user || !req.user.email) {
     console.log("🔴 Access Denied: No email found in req.user");

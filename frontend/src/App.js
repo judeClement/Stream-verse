@@ -14,8 +14,15 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard/>}/>
+            {/* Secure Admin Dashboard */}
             <Route
+                path="/admin/dashboard"
+                element={
+                    <PrivateRoute adminOnly={true}>
+                        <AdminDashboard />
+                    </PrivateRoute>
+                }
+            />            <Route
                 path="/watch"
                 element={
                     <PrivateRoute>

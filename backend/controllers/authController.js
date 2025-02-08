@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const ActivityLog = require('../models/ActivityLog')
 
 // Register User
 const registerUser = async (req, res) => {
@@ -19,6 +20,14 @@ const registerUser = async (req, res) => {
             password, // Store password as plain text
         });
         await newUser.save();
+
+                // Log the activity
+                await ActivityLog.create({
+                    user: user._id,
+                    action: 'SIGNUP',
+                    // ip: req.ip,
+                    userAgent: req.headers['user-agent']
+                });
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
@@ -45,7 +54,12 @@ const loginUser = async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+        // Log the activity
+        await ActivityLog.create({
+            user: user._id,
+            action: 'LOGIN',
+            userAgent: req.headers['user-agent']
+        });
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {
         console.error(err);

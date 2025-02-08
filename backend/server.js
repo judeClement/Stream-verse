@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const watchLaterRoutes = require('./routes/watchLaterRoutes');
 const adminRoutes = require('./routes/adminRoutes'); // Import Admin Routes
+const movieRoutes = require('./routes/movieRoutes');
 
 dotenv.config(); // Load environment variables
 connectDB(); // Connect to MongoDB
@@ -28,6 +29,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/watchLater', watchLaterRoutes);
 
 app.use('/api/admin', adminRoutes); // Add Admin Routes
+
+app.use('/api/movies', movieRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

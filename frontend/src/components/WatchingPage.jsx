@@ -3,32 +3,35 @@ import Navbar from "./Navbar.jsx";
 import RecommendedMovies from "./RecommendedMovies.jsx";
 
 const WatchingPage = () => {
-    // Default movie
-    const defaultMovie = {
-        id: 389, // TMDb ID for "12 Angry Men"
-        videoUrl: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4", // Dummy video URL
-        thumbnail: "https://facts.net/wp-content/uploads/2023/06/35-facts-about-the-movie-12-angry-men-1687250389.jpg",
-    };
-
-    const [currentMovie, setCurrentMovie] = useState(defaultMovie);
+    const [currentMovie, setCurrentMovie] = useState(null);
     const [movieDetails, setMovieDetails] = useState(null);
 
-    // Fetch movie details
+    // Fetch movie details from TMDB
     useEffect(() => {
         const fetchMovieDetails = async () => {
+            if (!currentMovie || !currentMovie.tmdbId) return;  // Ensure currentMovie is set before fetching
+
             try {
                 const apiKey = "fed8bdfdab036c276017de82f5ae9589";
                 const response = await fetch(
-                    `https://api.themoviedb.org/3/movie/${currentMovie.id}?api_key=${apiKey}&language=en-US`
+                    `https://api.themoviedb.org/3/movie/${currentMovie.tmdbId}?api_key=${apiKey}&language=en-US`
                 );
                 const data = await response.json();
                 setMovieDetails(data);
+
+                // Set thumbnail if not provided
+                if (!currentMovie.thumbnail && data.poster_path) {
+                    setCurrentMovie((prevMovie) => ({
+                        ...prevMovie,
+                        thumbnail: `https://image.tmdb.org/t/p/original${data.poster_path}`,
+                    }));
+                }
             } catch (error) {
                 console.error("Error fetching movie details:", error);
             }
         };
 
-        if (currentMovie.id) fetchMovieDetails();
+        fetchMovieDetails();
     }, [currentMovie]);
 
     // Video player controls
@@ -52,14 +55,17 @@ const WatchingPage = () => {
         setIsPlaying(!isPlaying);
     };
 
-    // Handle movie selection
+    // Handle movie selection from RecommendedMovies
     const handleMovieSelect = (movie) => {
-        setCurrentMovie({
-            id: movie.id,
-            videoUrl: movie.videoUrl, // Set dummy video URL
-            thumbnail: movie.thumbnail, // Set movie-specific thumbnail
-        });
+        setCurrentMovie(movie);
         setIsPlaying(false);
+    };
+
+    // Automatically load the first recommended movie
+    const handleFirstMovieLoad = (firstMovie) => {
+        if (!currentMovie) {
+            setCurrentMovie(firstMovie);
+        }
     };
 
     return (
@@ -68,17 +74,21 @@ const WatchingPage = () => {
             <div className="bg-black text-white min-h-screen">
                 {/* Video Player */}
                 <div className="relative w-full h-[90vh] bg-black mt-18 flex items-center justify-center">
-                    <video
-                        ref={videoRef}
-                        src={currentMovie.videoUrl}
-                        poster={currentMovie.thumbnail}
-                        controls={isPlaying}
-                        className="w-full h-full object-cover"
-                        onError={() => console.error("Video failed to load or play.")}
-                    ></video>
+                    {currentMovie ? (
+                        <video
+                            ref={videoRef}
+                            src={currentMovie.videoUrl}
+                            poster={currentMovie.thumbnail}
+                            controls={isPlaying}
+                            className="w-full h-full object-cover"
+                            onError={() => console.error("Video failed to load or play.")}
+                        ></video>
+                    ) : (
+                        <p className="text-center text-xl">Loading Movie...</p>
+                    )}
 
                     {/* Custom Play/Pause Button */}
-                    {!isPlaying && (
+                    {!isPlaying && currentMovie && (
                         <button
                             onClick={togglePlayPause}
                             className="absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-white rounded-full p-4 px-6 hover:bg-green-700 hover:scale-105 transition-transform"
@@ -107,7 +117,10 @@ const WatchingPage = () => {
                 )}
 
                 {/* Recommended Movies Section */}
-                <RecommendedMovies onMovieSelect={handleMovieSelect} />
+                <RecommendedMovies
+                    onMovieSelect={handleMovieSelect}
+                    onFirstMovieLoad={handleFirstMovieLoad}  // Automatically load the first movie
+                />
             </div>
         </div>
     );
