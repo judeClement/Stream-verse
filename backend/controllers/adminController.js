@@ -64,7 +64,9 @@ const addMovie = async (req, res) => {
             tmdbId,
             title: movieTitle,
             videoUrl,
-            thumbnail: thumbnail || posterPath  // Use provided thumbnail or TMDB poster
+            thumbnail: thumbnail,      // Use provided thumbnail (or leave null)
+            poster: posterPath         // Save poster from TMDB
+
         });
 
         await newMovie.save();

@@ -1,10 +1,54 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "./Navbar.jsx";
 import RecommendedMovies from "./RecommendedMovies.jsx";
+import GenreSections from "./GenreSections.jsx";  // NEW IMPORT
+import api from "../api";  // Ensure you have access to the API
 
 const WatchingPage = () => {
     const [currentMovie, setCurrentMovie] = useState(null);
     const [movieDetails, setMovieDetails] = useState(null);
+    const [allMovies, setAllMovies] = useState([]);  // NEW STATE FOR ALL MOVIES
+    const videoSectionRef = useRef(null);  // Ref for video player section
+
+    // Fetch movies and their genres from TMDB
+    useEffect(() => {
+        const fetchAllMoviesWithGenres = async () => {
+            try {
+                const response = await api.get('/movies');
+                const movies = response.data;
+
+                // Fetch genres for each movie from TMDB
+                const moviesWithGenres = await Promise.all(movies.map(async (movie) => {
+                    if (movie.tmdbId) {
+                        try {
+                            const apiKey = "fed8bdfdab036c276017de82f5ae9589";
+                            const tmdbResponse = await fetch(
+                                `https://api.themoviedb.org/3/movie/${movie.tmdbId}?api_key=${apiKey}&language=en-US`
+                            );
+                            const tmdbData = await tmdbResponse.json();
+                            
+                            // Merge genres into the movie object
+                            return {
+                                ...movie,
+                                genres: tmdbData.genres ? tmdbData.genres.map(genre => genre.name) : [],
+                                poster: movie.poster || `https://image.tmdb.org/t/p/original${tmdbData.poster_path}`
+                            };
+                        } catch (error) {
+                            console.error(`Error fetching TMDB data for movie ${movie.title}:`, error);
+                            return { ...movie, genres: [] };  // Fallback if TMDB fetch fails
+                        }
+                    }
+                    return { ...movie, genres: [] };  // If no tmdbId
+                }));
+
+                setAllMovies(moviesWithGenres);
+            } catch (error) {
+                console.error("Error fetching all movies:", error);
+            }
+        };
+
+        fetchAllMoviesWithGenres();
+    }, []);
 
     // Fetch movie details from TMDB
     useEffect(() => {
@@ -59,6 +103,10 @@ const WatchingPage = () => {
     const handleMovieSelect = (movie) => {
         setCurrentMovie(movie);
         setIsPlaying(false);
+                // Scroll to the video player smoothly
+                if (videoSectionRef.current) {
+                    videoSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
     };
 
     // Automatically load the first recommended movie
@@ -68,17 +116,19 @@ const WatchingPage = () => {
         }
     };
 
+    
     return (
         <div>
             <Navbar />
             <div className="bg-black text-white min-h-screen">
                 {/* Video Player */}
-                <div className="relative w-full h-[90vh] bg-black mt-18 flex items-center justify-center">
+                <div ref={videoSectionRef} className="relative w-full h-[90vh] bg-black mt-18 flex items-center justify-center">
+
                     {currentMovie ? (
                         <video
                             ref={videoRef}
                             src={currentMovie.videoUrl}
-                            poster={currentMovie.thumbnail}
+                            poster={currentMovie.thumbnail || currentMovie.poster}  // Use thumbnail, fallback to poster
                             controls={isPlaying}
                             className="w-full h-full object-cover"
                             onError={() => console.error("Video failed to load or play.")}
@@ -121,7 +171,12 @@ const WatchingPage = () => {
                     onMovieSelect={handleMovieSelect}
                     onFirstMovieLoad={handleFirstMovieLoad}  // Automatically load the first movie
                 />
+                                {/* New Genre Sections */}
+                                {allMovies.length > 0 && (
+                    <GenreSections movies={allMovies} onMovieSelect={handleMovieSelect} />
+                )}
             </div>
+            
         </div>
     );
 };

@@ -25,7 +25,7 @@ const RecommendedMovies = ({ onMovieSelect,onFirstMovieLoad }) => {
             const token = localStorage.getItem('token');
             await api.post(
                 '/watchLater/add',
-                { movieId: movie.tmdbId.toString(), title: movie.title, poster: movie.thumbnail },
+                { movieId: movie.tmdbId.toString(), title: movie.title, poster: movie.poster },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             alert(`${movie.title} added to Watch Later!`);
@@ -45,7 +45,7 @@ const RecommendedMovies = ({ onMovieSelect,onFirstMovieLoad }) => {
                             className="relative min-w-[200px] bg-gray-800 p-2 rounded hover:shadow-lg transition cursor-pointer"
                             onClick={() => onMovieSelect(movie)}
                         >
-                            <img src={movie.thumbnail} alt={movie.title} className="w-full h-[300px] object-cover rounded" />
+                            <img src={movie.poster} alt={movie.title} className="w-full h-[300px] object-cover rounded" />
                             <h4 className="mt-2 text-sm font-semibold">{movie.title || 'Untitled'}</h4>
                             <button
                                 className="absolute top-2 right-2 text-white hover:text-green-500"
