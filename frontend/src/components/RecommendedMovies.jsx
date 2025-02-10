@@ -37,7 +37,7 @@ const RecommendedMovies = ({ onMovieSelect,onFirstMovieLoad }) => {
     return (
         <div className="p-4">
             <h2 className="text-2xl font-semibold mb-4">You May Also Like</h2>
-            <div className="flex space-x-4 overflow-x-scroll scrollbar-hide">
+            <div className="flex space-x-4 overflow-x-scroll scrollbar-hide"style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 {movies.length > 0 ? (
                     movies.map((movie) => (
                         <div

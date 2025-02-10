@@ -72,6 +72,21 @@ const Navbar = () => {
         navigate('/login'); // Redirect to login page
     };
 
+    useEffect(() => {
+        const checkLoginStatus = () => {
+            const token = localStorage.getItem('token');
+            setIsLoggedIn(!!token);
+        };
+    
+        checkLoginStatus(); // Initial check
+        window.addEventListener('storage', checkLoginStatus); // Detect token changes
+    
+        return () => {
+            window.removeEventListener('storage', checkLoginStatus);
+        };
+    }, []);
+    
+
     return (
         <header
             className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${

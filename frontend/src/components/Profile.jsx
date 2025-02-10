@@ -203,7 +203,7 @@ const Profile = () => {
                 </Paper>
             </Container>
             <h3 className="text-xl font-semibold mt-6">My Watchlist</h3>
-            <div className="flex space-x-4 overflow-x-scroll scrollbar-hide mt-4">
+            <div className="flex space-x-4 overflow-x-scroll scrollbar-hide mt-4"style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 {watchLater.map((movie) => (
                     <div
                         key={movie.movieId}

@@ -23,13 +23,18 @@ const registerUser = async (req, res) => {
 
                 // Log the activity
                 await ActivityLog.create({
-                    user: user._id,
+                    user: newUser._id,
                     action: 'SIGNUP',
                     // ip: req.ip,
                     userAgent: req.headers['user-agent']
                 });
 
-        res.status(201).json({ message: 'User registered successfully' });
+        // Generate JWT token after successful registration
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Return token along with success message
+        res.status(201).json({ message: 'User registered successfully', token });
+    
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
