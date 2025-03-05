@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
                 });
 
         // Generate JWT token after successful registration
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
         // Return token along with success message
         res.status(201).json({ message: 'User registered successfully', token });
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
         // Log the activity
         await ActivityLog.create({
             user: user._id,

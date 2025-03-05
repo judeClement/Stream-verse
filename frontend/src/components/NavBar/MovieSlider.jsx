@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { IoClose } from "react-icons/io5";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 
 const MovieSlider = ({ movies }) => {
     const [trailerUrl, setTrailerUrl] = useState(null);
+    const [modal, setModal] = useState({ open: false, message: "", type: "success" });
 
     const API_KEY = 'fed8bdfdab036c276017de82f5ae9589';
 
@@ -18,11 +21,11 @@ const MovieSlider = ({ movies }) => {
             if (trailers.length > 0) {
                 setTrailerUrl(`https://www.youtube.com/embed/${trailers[0].key}`);
             } else {
-                alert('Trailer not available');
+                setModal({ open: true, message: "Trailer not available", type: "error" });
             }
         } catch (error) {
             console.error('Error fetching trailer:', error);
-            alert('Unable to fetch trailer');
+            setModal({ open: true, message: "Unable to fetch trailer", type: "error" });
         }
     };
 
@@ -56,7 +59,7 @@ const MovieSlider = ({ movies }) => {
                         </div>
 
                         {/* Description Section */}
-                        <div className="mt-2 relative text-black ">
+                        <div className="mt-2 relative text-black">
                             <h4 className="text-sm font-semibold">{movie.title}</h4>
                             <p className="text-xs mt-1">⭐ {movie.vote_average?.toFixed(1) || 'N/A'}</p>
                         </div>
@@ -85,6 +88,23 @@ const MovieSlider = ({ movies }) => {
                         >
                             ✖
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Alert Modal */}
+            {modal.open && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-40">
+                    <div className="bg-white rounded-lg p-6 sm:p-8 md:p-10 shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center relative transition-all transform scale-105 mx-4">
+                        <button className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition" onClick={() => setModal({ open: false, message: "", type: "success" })}>
+                            <IoClose size={24} />
+                        </button>
+
+                        <div className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full ${modal.type === "success" ? "bg-green-500" : "bg-red-500"}`}>
+                            {modal.type === "success" ? <FaCheckCircle className="text-white text-3xl" /> : <FaExclamationCircle className="text-white text-3xl" />}
+                        </div>
+
+                        <p className="text-gray-800 text-xl mt-6">{modal.message}</p>
                     </div>
                 </div>
             )}

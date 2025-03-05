@@ -70,73 +70,76 @@ const UserManagement = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold text-black mb-4">User Management</h1>
+<div className="container mx-auto p-6 w-full max-w-7xl bg-white shadow-lg rounded-lg">
+    <h1 className="text-2xl font-bold text-green-700 mb-6 text-center md:text-left">User Management</h1>
 
-            <div className="flex justify-between items-center mt-4">
-                <input
-                    type="text"
-                    placeholder="Search by name..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="p-2 border border-gray-700 rounded bg-gray-800 text-white"
-                />
-                <button
-                    onClick={handleSort}
-                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                    Sort by Name ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
-                </button>
-            </div>
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <input
+            type="text"
+            placeholder="Search by name..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="p-2 border border-gray-300 rounded bg-white text-black w-full md:w-auto focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <button
+            onClick={handleSort}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-all w-full md:w-auto"
+        >
+            Sort by Name ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+        </button>
+    </div>
 
-            <table className="w-full mt-5 border border-gray-700 text-white">
-                <thead>
-                    <tr className="bg-gray-800">
-                        <th className="p-2">Name</th>
-                        <th className="p-2">Email</th>
-                        <th className="p-2">Actions</th>
+    <div className="overflow-x-auto mt-6">
+        <table className="w-full border border-gray-300 text-black text-sm md:text-base bg-white rounded-lg">
+            <thead>
+                <tr className="bg-green-100 text-green-800">
+                    <th className="p-3">Name</th>
+                    <th className="p-3">Email</th>
+                    <th className="p-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {paginatedUsers.map(user => (
+                    <tr key={user._id} className="border-b border-gray-200 hover:bg-green-50 transition-all">
+                        <td className="p-3 text-center break-words">{user.name}</td>
+                        <td className="p-3 text-center break-words">{user.email}</td>
+                        <td className="p-3 text-center">
+                            <button
+                                onClick={() => handleDelete(user._id)}
+                                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-all"
+                            >
+                                Delete
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {paginatedUsers.map(user => (
-                        <tr key={user._id} className="border-b border-gray-700 text-black">
-                            <td className="p-2 text-center">{user.name}</td>
-                            <td className="p-2 text-center">{user.email}</td>
-                            <td className="p-2 text-center">
-                                <button
-                                    onClick={() => handleDelete(user._id)}
-                                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                ))}
+            </tbody>
+        </table>
+    </div>
 
-            <div className="flex justify-between items-center mt-4 text-white">
-                <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className={`px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}
-                >
-                    Previous
-                </button>
+    <div className="flex flex-col md:flex-row justify-between items-center mt-6 text-black gap-4">
+        <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded w-full md:w-auto ${currentPage === 1 ? 'bg-gray-300 text-gray-600' : 'bg-green-600 text-white hover:bg-green-700 transition-all'}`}
+        >
+            Previous
+        </button>
 
-                <span className='text-black'>
-                    Page {currentPage} of {totalPages}
-                </span>
+        <span className="text-center font-medium">
+            Page {currentPage} of {totalPages}
+        </span>
 
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className={`px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'}`}
-                >
-                    Next
-                </button>
-            </div>
-        </div>
+        <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded w-full md:w-auto ${currentPage === totalPages ? 'bg-gray-300 text-gray-600' : 'bg-green-600 text-white hover:bg-green-700 transition-all'}`}
+        >
+            Next
+        </button>
+    </div>
+</div>
+
     );
 };
 

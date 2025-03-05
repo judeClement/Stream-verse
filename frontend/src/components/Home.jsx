@@ -43,11 +43,11 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
-            <div className='bg-blue-200'>
+        <div className=''>
+            <div className=''>
             <Navbar/>
             </div>
-            <div className='bg-red-200 mt-19'>
+            <div className='bg-black mt-19'>
             <FeaturedContent/>
             </div>
             <div className='bg-'>
@@ -55,17 +55,17 @@ const Home = () => {
                 {error && <p className="text-red-500">{error}</p>}
                 
                 <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-4">Popular Movies</h3>
+                    <h3 className="text-3xl font-bold mb-4 text-black mt-6 ml-6 border-b-4 border-green-600 inline-block pb-1">Popular Movies</h3>
                     <MovieSlider movies={popularMovies} />
                 </div>
 
                 <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-4">Trending Now</h3>
+                    <h3 className="text-3xl font-bold mb-4 text-black mt-6 ml-6 border-b-4 border-green-600 inline-block pb-1">Trending Now</h3>
                     <MovieSlider movies={trendingMovies} />
                 </div>
 
                 <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-4">Featured</h3>
+                    <h3 className="text-3xl font-bold mb-4 text-black mt-6 ml-6 border-b-4 border-green-600 inline-block pb-1">Featured</h3>
                     <MovieSlider movies={featuredMovies} />
                 </div>
             </section>

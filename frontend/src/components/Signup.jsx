@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For redirection
-import { TextField, Button, Typography, Container, Paper, Link } from '@mui/material';
-import api from '../api'; // Ensure this points to your Axios instance with the correct base URL
+import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const Signup = () => {
     const [name, setName] = useState('');
@@ -9,7 +8,7 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
 
     const validateForm = () => {
         let tempErrors = {};
@@ -43,99 +42,46 @@ const Signup = () => {
 
             // Notify Navbar About Login Change
             window.dispatchEvent(new Event('storage'));
-
             setMessage('User registered successfully! Redirecting...');
             setErrors({});
-
-            setTimeout(() => navigate('/'), 1000); // Redirect to homepage after 1 sec
-
+            setTimeout(() => navigate('/watch'), 1000);
         } catch (error) {
             setMessage(error.response?.data.message || 'Error occurred');
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs" style={{ marginTop: '100px' }}>
-            <Paper elevation={3} style={{ padding: '20px', backgroundColor: '#141414', color: 'white' }}>
-                <Typography variant="h5" align="center" style={{ marginBottom: '20px' }}>
-                    Sign Up
-                </Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        error={!!errors.name}
-                        helperText={errors.name}
-                        InputProps={{
-                            style: { backgroundColor: '#1c1c1c', color: 'white' },
-                        }}
-                        InputLabelProps={{
-                            style: { color: '#00b300' },
-                        }}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        error={!!errors.email}
-                        helperText={errors.email}
-                        InputProps={{
-                            style: { backgroundColor: '#1c1c1c', color: 'white' },
-                        }}
-                        InputLabelProps={{
-                            style: { color: '#00b300' },
-                        }}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        error={!!errors.password}
-                        helperText={errors.password}
-                        InputProps={{
-                            style: { backgroundColor: '#1c1c1c', color: 'white' },
-                        }}
-                        InputLabelProps={{
-                            style: { color: '#00b300' },
-                        }}
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        style={{ backgroundColor: '#00b300', color: 'white', marginTop: '20px' }}
-                    >
-                        Signup
-                    </Button>
-                    {message && (
-                        <Typography variant="body2" align="center" style={{ marginTop: '10px', color: '#00b300' }}>
-                            {message}
-                        </Typography>
-                    )}
-                </form>
-                <Typography variant="body2" align="center" style={{ marginTop: "20px" }}>
-                    Already a member?{" "}
-                    <Link href="/login" style={{ color: "#00b300", textDecoration: "none", fontWeight: "bold" }}>
-                        Login
-                    </Link>
-                </Typography>
-            </Paper>
-        </Container>
+        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4 sm:p-8 md:p-12 lg:p-16 xl:p-20"
+        style={{ backgroundImage: "url('https://wallpaperaccess.com/full/3988284.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="absolute inset-0 bg-white bg-opacity-90"></div>
+            <div className="relative z-10 flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
+                <div className="w-full md:w-1/2 p-10">
+                    <h2 className="text-3xl font-semibold text-gray-900 text-center mb-6">Sign Up</h2>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                        </div>
+                        <div>
+                            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        </div>
+                        <div>
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-3 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                        </div>
+                        <button type="submit" className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">Signup</button>
+                        {message && (<p className="text-center text-green-600 mt-4">{message}</p>)}
+                    </form>
+                    <p className="text-center mt-6 text-gray-600">Already a member? <a href="/login" className="text-green-600 font-bold hover:underline">Login</a></p>
+                </div>
+                <div className="w-full md:w-1/2 bg-gradient-to-r from-green-500 to-green-700 flex flex-col justify-center items-center text-white p-8 text-center">
+                    <h2 className="text-3xl font-bold mb-4">Welcome back!</h2>
+                    <p className="mb-6">We're happy to have you here. It's great to see you again. We hope you had a safe and enjoyable time away.</p>
+                    <a href="/login" className="px-6 py-3 border border-white rounded-full text-white hover:bg-white hover:text-green-600 transition duration-200">Already Member? Login</a>
+                </div>
+            </div>
+        </div>
     );
 };
 

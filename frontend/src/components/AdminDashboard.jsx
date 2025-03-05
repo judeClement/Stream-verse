@@ -32,65 +32,65 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <Navbar />
+<div className="font-questrial min-h-screen bg-gray-100">
+    <Navbar />
 
-            <div className="flex"style={{ marginTop: '4.5rem' }}>
-                {/* Sidebar */}
-                <div
-                    className={`bg-gray-200 text-black transition-all duration-300 ${
-                        isSidebarOpen ? (isSidebarSlim ? 'w-20' : 'w-64') : 'w-0'
-                    } min-h-screen overflow-hidden`}
-                >
-                    <div className="p-4">
-                        <ul className="w-full">
-                            <li className="mb-2">
-                                <button
-                                    className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
-                                    onClick={() => setActiveComponent('UserManagement')}
-                                >
-                                    <Users size={24} />
-                                    {!isSidebarSlim && <span className="ml-2">User Management</span>}
-                                </button>
-                            </li>
-                            <li className="mb-2">
-                                <button
-                                    className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
-                                    onClick={() => setActiveComponent('ActivityLogs')}
-                                >
-                                    <ClipboardList size={24} />
-                                    {!isSidebarSlim && <span className="ml-2">Activity Logs</span>}
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
-                                    onClick={() => setActiveComponent('MovieManagement')}
-                                >
-                                    <Film size={24} />
-                                    {!isSidebarSlim && <span className="ml-2">Movie Management</span>}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Main Content */}
-                <div className="flex-1 p-4">
-                    {/* Buttons moved to the right side */}
-                    <div className="flex justify-end space-x-4 mb-4">
-                        <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded" onClick={toggleSidebar}>
-                            <Menu size={24} />
+    <div className="flex flex-col md:flex-row" style={{ marginTop: '4.5rem' }}>
+        {/* Sidebar */}
+        <div
+            className={`bg-gray-200 text-black transition-all duration-300 ${
+                isSidebarOpen ? (isSidebarSlim ? 'w-20' : 'w-64') : 'w-0'
+            } min-h-screen overflow-hidden fixed md:relative z-50 md:z-auto`}
+        >
+            <div className="p-4">
+                <ul className="w-full">
+                    <li className="mb-2">
+                        <button
+                            className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
+                            onClick={() => setActiveComponent('UserManagement')}
+                        >
+                            <Users size={24} />
+                            {!isSidebarSlim && <span className="ml-2">User Management</span>}
                         </button>
-                        <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded" onClick={toggleSlimSidebar}>
-                            {isSidebarSlim ? 'Expand Sidebar' : 'Toggle Slim'}
+                    </li>
+                    <li className="mb-2">
+                        <button
+                            className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
+                            onClick={() => setActiveComponent('ActivityLogs')}
+                        >
+                            <ClipboardList size={24} />
+                            {!isSidebarSlim && <span className="ml-2">Activity Logs</span>}
                         </button>
-                    </div>
-                    
-                    {renderComponent()}
-                </div>
+                    </li>
+                    <li>
+                        <button
+                            className="flex items-center w-full text-left hover:bg-gray-300 p-2 rounded"
+                            onClick={() => setActiveComponent('MovieManagement')}
+                        >
+                            <Film size={24} />
+                            {!isSidebarSlim && <span className="ml-2">Movie Management</span>}
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-4 ml-0 md:ml-auto">
+            {/* Buttons moved to the right side */}
+            <div className="flex justify-end space-x-4 mb-4">
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded" onClick={toggleSidebar}>
+                    <Menu size={24} />
+                </button>
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded" onClick={toggleSlimSidebar}>
+                    {isSidebarSlim ? 'Expand Sidebar' : 'Toggle Slim'}
+                </button>
+            </div>
+            {renderComponent()}
+        </div>
+    </div>
+</div>
+
     );
 };
 
