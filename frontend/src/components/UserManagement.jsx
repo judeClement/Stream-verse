@@ -49,6 +49,7 @@ const UserManagement = () => {
     };
 
     const filteredUsers = users
+        .filter(user => user.name.toLowerCase() !== "admin") // Exclude Admin
         .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .sort((a, b) => {
             if (sortOrder === 'asc') {

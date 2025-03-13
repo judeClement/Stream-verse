@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../components/logo-removedbg1.png';
 import logo1 from '../components/logo1.png';
 import logo2 from '../components/logo2.png';
+import { MdAdminPanelSettings } from "react-icons/md";
 
 import api from '../api';
 
@@ -112,24 +113,24 @@ const Navbar = () => {
                 <nav>
                     <ul className="flex space-x-6 font-bold">
                         <li>
-                            <Link
-                                to="/"
-                                className={`hover:text-white ${
-                                    isScrolled ? 'text-white' : 'text-green-700'
-                                }`}
-                            >
-                                Home
-                            </Link>
+                        <Link
+    to="/"
+    className="font-medium transition-colors duration-300 hover:font-semibold"
+    style={{ color: "#009150" }}
+>
+    Home
+</Link>
+
+
+
                         </li>
                         {isLoggedIn ? (
                             // Show Browse if user is logged in
                             <li>
                                 <Link
                                     to="/watch"
-                                    className={`hover:text-white ${
-                                        isScrolled ? 'text-white' : 'text-green-700'
-                                    }`}
-                                >
+                                    className="font-medium transition-colors duration-300 hover:font-semibold"
+                                    style={{ color: "#009150" }}>
                                     Browse
                                 </Link>
                             </li>
@@ -139,9 +140,8 @@ const Navbar = () => {
                                 <li>
                                     <Link
                                         to="/login"
-                                        className={`hover:text-white ${
-                                            isScrolled ? 'text-white' : 'text-green-700'
-                                        }`}
+                                        className="font-medium transition-colors duration-300 hover:font-semibold"
+                                        style={{ color: "#009150" }}
                                     >
                                         Login
                                     </Link>
@@ -149,9 +149,8 @@ const Navbar = () => {
                                 <li>
                                     <Link
                                         to="/signup"
-                                        className={`hover:text-white ${
-                                            isScrolled ? 'text-white' : 'text-green-700'
-                                        }`}
+                                        className="font-medium transition-colors duration-300 hover:font-semibold"
+                                        style={{ color: "#009150" }}
                                     >
                                         Signup
                                     </Link>
@@ -160,9 +159,9 @@ const Navbar = () => {
                         )}
                          {user && user.email === 'admin@gmail.com' && (
                             <li>
-                              <Link to="/admin/dashboard"  className={`hover:text-white ${
-                                        isScrolled ? 'text-white' : 'text-green-700'
-                                    }`}>
+                              <Link to="/admin/dashboard" 
+    className="font-medium transition-colors duration-300 hover:font-semibold"
+    style={{ color: "#009150" }}>
                                   Dashboard
                               </Link>
                             </li>
@@ -182,12 +181,12 @@ const Navbar = () => {
                     {dropdownOpen && (
                         <div
     id="dropdown"
-    className="absolute right-0 mt-3 w-48 bg-black text-white rounded-lg shadow-xl backdrop-blur-lg transition-transform transform scale-95 origin-top-right animate-fadeIn"
+    className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-xl backdrop-blur-lg transition-transform transform scale-95 origin-top-right animate-fadeIn"
 >
-    <ul className="divide-y divide-gray-700">
+    <ul className="">
         {/* User Info Section */}
         {user && (
-            <li className="px-4 py-3 flex items-center space-x-3">
+            <li className="px-4 rounded-lg py-3 flex items-center space-x-3">
                 <img
                     src={user.avatar || "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"}
                     alt="User Avatar"
@@ -201,7 +200,7 @@ const Navbar = () => {
         )}
 
         {/* My Account */}
-        <li className="px-4 py-3 hover:bg-gray-800 transition cursor-pointer flex items-center space-x-3">
+        <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.486 2 2 6.486 2 12c0 5.514 4.486 10 10 10s10-4.486 10-10c0-5.514-4.486-10-10-10zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
             </svg>
@@ -209,7 +208,7 @@ const Navbar = () => {
         </li>
 
         {/* Logout */}
-        <li className="px-4 py-3 hover:bg-gray-800 transition cursor-pointer flex items-center space-x-3">
+        <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M10.09 15.59L12.67 18l6.33-6.41-6.33-6.41-2.58 2.41L14 12l-3.91 3.59zM4 4h7V2H4C2.9 2 2 2.9 2 4v16c0 1.1.9 2 2 2h7v-2H4V4z"/>
             </svg>
