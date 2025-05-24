@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ActivityLog = require('../models/ActivityLog')
+const bcrypt = require('bcryptjs');
 
 // Register User
 const registerUser = async (req, res) => {
@@ -13,11 +14,15 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         }
 
+    // New hashing logic
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
         // Create new user
         const newUser = new User({
             name,
             email,
-            password, // Store password
+      password: hashedPassword // Store hashed password
         });
         await newUser.save();
 
@@ -52,10 +57,11 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid email' });
         }
 
-        // Compare passwords directly
-        if (user.password !== password) {
-            return res.status(400).json({ error: 'Invalid password' });
-        }
+    // Replace direct comparison with bcrypt
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid password' });
+    }
 
         // Generate JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
@@ -86,15 +92,18 @@ const updateUser = async (req, res) => {
         const { name, email, currentPassword, newPassword } = req.body;
         const user = await User.findById(req.user.id);
 
-        if (user.password !== currentPassword) {
-            return res.status(400).json({ message: 'Current password is incorrect' });
-        }
+    // Verify current password with bcrypt
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
 
         user.name = name || user.name;
         user.email = email || user.email;
         if (newPassword) {
-            user.password = newPassword;
-        }
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(newPassword, salt);
+          }
 
         await user.save();
         res.json({ message: 'Profile updated successfully' });
