@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import logo from '../components/logo-removedbg1.png';
-import logo1 from '../components/logo1.png';
-import logo2 from '../components/logo2.png';
-import { MdAdminPanelSettings } from "react-icons/md";
-
 import api from '../api';
 
 const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
 
     const navigate = useNavigate();
+    const location = useLocation(); // Get current route
 
     // Check if the user is logged in
     useEffect(() => {
@@ -23,20 +20,13 @@ const Navbar = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 10) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
+            setIsScrolled(window.scrollY > 10);
         };
 
         window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             const dropdown = document.getElementById('dropdown');
@@ -48,9 +38,7 @@ const Navbar = () => {
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [dropdownOpen]);
 
     useEffect(() => {
@@ -76,149 +64,91 @@ const Navbar = () => {
         navigate('/login'); // Redirect to login page
     };
 
-    useEffect(() => {
-        const checkLoginStatus = () => {
-            const token = localStorage.getItem('token');
-            setIsLoggedIn(!!token);
-        };
-    
-        checkLoginStatus(); // Initial check
-        window.addEventListener('storage', checkLoginStatus); // Detect token changes
-    
-        return () => {
-            window.removeEventListener('storage', checkLoginStatus);
-        };
-    }, []);
-    
-
     return (
         <header
             className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-                isScrolled
-                    ? 'bg-black text-white shadow-md'
-                    : 'bg-transparent text-white'
+                isScrolled ? 'bg-black text-white shadow-md' : 'bg-transparent text-white'
             }`}
         >
             <div className="font-questrial flex justify-between items-center max-w-8xl mx-auto p-4 px-6">
-                {/* Logo */}
                 <Link to="/" className="flex items-center">
-                    <img
-                        src={logo}
-                        alt="StreamVerse Logo"
-                        className="size-10 object-contain"
-                    />
+                    <img src={logo} alt="StreamVerse Logo" className="size-10 object-contain" />
                 </Link>
 
-               {/* Navigation Links */}
                 <nav>
                     <ul className="flex space-x-6 font-bold">
                         <li>
-                        <Link
-    to="/"
-    className="font-medium transition-colors duration-300 hover:font-semibold"
-    style={{ color: "#009150" }}
->
-    Home
-</Link>
-
-
-
+                            <Link to="/" className="font-medium transition-colors duration-300 hover:font-semibold" style={{ color: "#009150" }}>
+                                Home
+                            </Link>
                         </li>
                         {isLoggedIn ? (
-                            // Show Browse if user is logged in
                             <li>
-                                <Link
-                                    to="/watch"
-                                    className="font-medium transition-colors duration-300 hover:font-semibold"
-                                    style={{ color: "#009150" }}>
+                                <Link to="/watch" className="font-medium transition-colors duration-300 hover:font-semibold" style={{ color: "#009150" }}>
                                     Browse
                                 </Link>
                             </li>
                         ) : (
                             <>
-                                {/* Show Login and Signup if user is not logged in */}
                                 <li>
-                                    <Link
-                                        to="/login"
-                                        className="font-medium transition-colors duration-300 hover:font-semibold"
-                                        style={{ color: "#009150" }}
-                                    >
+                                    <Link to="/login" className="font-medium transition-colors duration-300 hover:font-semibold" style={{ color: "#009150" }}>
                                         Login
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link
-                                        to="/signup"
-                                        className="font-medium transition-colors duration-300 hover:font-semibold"
-                                        style={{ color: "#009150" }}
-                                    >
+                                    <Link to="/signup" className="font-medium transition-colors duration-300 hover:font-semibold" style={{ color: "#009150" }}>
                                         Signup
                                     </Link>
                                 </li>
                             </>
                         )}
-                         {user && user.email === 'admin@gmail.com' && (
+                        {user && user.email === 'admin@gmail.com' && (
                             <li>
-                              <Link to="/admin/dashboard" 
-    className="font-medium transition-colors duration-300 hover:font-semibold"
-    style={{ color: "#009150" }}>
-                                  Dashboard
-                              </Link>
+                                <Link to="/admin/dashboard" className="font-medium transition-colors duration-300 hover:font-semibold" style={{ color: "#009150" }}>
+                                    Dashboard
+                                </Link>
                             </li>
-                          )}
+                        )}
                     </ul>
                 </nav>
 
-                {/* User Avatar */}
-                <div className="relative">
-                    <img
-                        id="user-avatar"
-                        src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full cursor-pointer border-2 border-green-900 hover:border-green-400 transition"
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                    />
-                    {dropdownOpen && (
-                        <div
-    id="dropdown"
-    className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-xl backdrop-blur-lg transition-transform transform scale-95 origin-top-right animate-fadeIn"
->
-    <ul className="">
-        {/* User Info Section */}
-        {user && (
-            <li className="px-4 rounded-lg py-3 flex items-center space-x-3">
-                <img
-                    src={user.avatar || "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"}
-                    alt="User Avatar"
-                    className="h-8 w-8 rounded-full border-2 border-green-500"
-                />
-                <div>
-                    <p className="font-semibold">{user.name || "User"}</p>
-                    <p className="text-xs text-gray-400">{user.email}</p>
-                </div>
-            </li>
-        )}
-
-        {/* My Account */}
-        <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.486 2 2 6.486 2 12c0 5.514 4.486 10 10 10s10-4.486 10-10c0-5.514-4.486-10-10-10zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-            </svg>
-            <Link to="/profile">My Account</Link>
-        </li>
-
-        {/* Logout */}
-        <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10.09 15.59L12.67 18l6.33-6.41-6.33-6.41-2.58 2.41L14 12l-3.91 3.59zM4 4h7V2H4C2.9 2 2 2.9 2 4v16c0 1.1.9 2 2 2h7v-2H4V4z"/>
-            </svg>
-            <button onClick={handleLogout}>Logout</button>
-        </li>
-    </ul>
-</div>
-
-                    )}
-                </div>
+                {/* Hide Avatar on Home Page */}
+                {location.pathname !== '/' && (
+                    <div className="relative">
+                        <img
+                            id="user-avatar"
+                            src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"
+                            alt="User Avatar"
+                            className="h-10 w-10 rounded-full cursor-pointer border-2 border-green-900 hover:border-green-400 transition"
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                        />
+                        {dropdownOpen && (
+                            <div id="dropdown" className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-xl backdrop-blur-lg transition-transform transform scale-95 origin-top-right animate-fadeIn">
+                                <ul>
+                                    {user && (
+                                        <li className="px-4 rounded-lg py-3 flex items-center space-x-3">
+                                            <img
+                                                src={user.avatar || "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png"}
+                                                alt="User Avatar"
+                                                className="h-8 w-8 rounded-full border-2 border-green-500"
+                                            />
+                                            <div>
+                                                <p className="font-semibold">{user.name || "User"}</p>
+                                                <p className="text-xs text-gray-400">{user.email}</p>
+                                            </div>
+                                        </li>
+                                    )}
+                                    <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
+                                        <Link to="/profile">My Account</Link>
+                                    </li>
+                                    <li className="px-4 rounded-lg py-3 hover:bg-gray-100 transition cursor-pointer flex items-center space-x-3">
+                                        <button onClick={handleLogout}>Logout</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </header>
     );

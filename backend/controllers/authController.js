@@ -13,11 +13,11 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         }
 
-        // Create new user without hashing the password
+        // Create new user
         const newUser = new User({
             name,
             email,
-            password, // Store password as plain text
+            password, // Store password
         });
         await newUser.save();
 

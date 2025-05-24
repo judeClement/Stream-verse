@@ -68,23 +68,17 @@ const FeaturedContent = () => {
                 </h2>
 
                 {/* Input Box and Watch Button */}
-                <div className="flex items-center gap-2 w-full max-w-md">
-                    <input
-                        type="text"
-                        placeholder="Enter movie or keyword"
-                        className="flex-1 px-4 py-2 rounded-l-md text-black focus:outline-none"
-                    />
-                    <button
-                        className="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-r-md text-white"
-                        onClick={() => navigate("/login")}
-                    >
-                        Watch
-                    </button>
-                </div>
+                <div className="flex items-center justify-center w-full max-w-md text-center">
+                <button
+    className="px-6 py-2 border-1 border-white text-white bg-transparent rounded-md hover:bg-white hover:text-green-600 transition-all duration-300 ease-in-out font-semibold"
+    onClick={() => navigate("/login")}
+>
+    🔓 Unlock Entertainment
+</button>
 
-                <p className="text-sm md:text-ms m-2 text-white hover:underline cursor-pointer">
-                    <Link to="/signup">Sign in to see more</Link>
-                </p>
+</div>
+
+
             </div>
         </section>
     );
